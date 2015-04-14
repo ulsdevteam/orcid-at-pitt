@@ -1,0 +1,139 @@
+/* CSS Document */
+
+body {
+	margin: 2em auto;
+	width: 95%;
+	background: url(../images/blue_orchid_opt.jpg) no-repeat center center fixed;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	}
+	
+#wrapper {
+	width: 70%;
+	min-width: 780px;
+	max-width: 1900px;
+	margin: 0 auto;
+	background: #fff;
+	padding: 15px 15px 10px 15px;
+	}
+	
+section {
+	background: #98ccfc;
+	padding: .2em 2em;
+	margin-top: 1em;
+	min-height: 300px;
+	text-align: center;
+	}
+
+footer {
+  position: relative;
+	display: flex;
+	height: 300px;
+	font: 75% "Trebuchet MS", Arial, Helvetica, sans-serif;
+	/*color: #666;*/
+	/*background: #ebebd8;*/
+	margin-top: 4em;
+	clear: both;
+	}
+
+#foot-left, #foot-center, #foot-right  {
+	width: 220px;
+	height: 300px;
+	margin: auto;
+	text-align: center;
+	text-transform: uppercase;
+	}	
+	
+header h1 {
+	text-align: center;
+	border-bottom: 1px solid #000154;
+	margin-top: -.6em;
+	}
+	
+article h1 {
+	font-size: 180%;
+	}	
+
+.message {
+	color: #bb9e3e;
+	}
+	
+/* #### EXPERIMENTAL ### */
+
+/*#foot-left .button, #foot-center .button, #foot-right .button {
+   position: absolute;
+   bottom: 0;
+   margin-left: 5.5em;
+  }*/
+
+/*#foot-left p a.footer-button, #foot-center p a.footer-button, #foot-right p a.footer-button {
+  display: block; 
+	
+
+	text-indent: -9999px; 
+} */
+
+#foot-left p a.footer-button, #foot-center p a.footer-button, #foot-right p a.footer-button {
+  width: 90px; 
+  height: 90px;
+  text-indent: -9999px;
+  display: block;
+  margin-left: 2em;
+  position: absolute;
+  bottom: 30px;
+  margin-left: 5.2em;
+}
+
+#foot-left p a.footer-button {
+  background: url(../images/button_sprite.png) no-repeat -16px -18px; 
+}
+
+#foot-left p a.footer-button:hover {
+  background: url(../images/button_sprite.png) no-repeat -124px -18px;
+}
+
+#foot-center p a.footer-button {
+  background: url(../images/button_sprite.png) no-repeat -16px -133px; 
+}
+
+#foot-center p a.footer-button:hover {
+  background: url(../images/button_sprite.png) no-repeat -124px -133px;
+}
+
+#foot-right p a.footer-button {
+  background: url(../images/button_sprite.png) no-repeat -16px -242px; 
+}
+
+#foot-right p a.footer-button:hover {
+  background: url(../images/button_sprite.png) no-repeat -124px -242px;
+}
+
+.actionbutton {
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.actionbutton:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
