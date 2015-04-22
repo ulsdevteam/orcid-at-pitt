@@ -64,7 +64,8 @@ if (isset($_GET['error'])) {
 	if (is_array($row)) {
 		// Yes, the user exists.  Do we already have a valid ORCID and token?
 		if (isset($row['ORCID']) && isset($row['TOKEN'])) {
-			if (validate_record($row['ORCID'], $row['TOKEN'], $remote_user)) {
+			// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
+			if (validate_record($row['ORCID'], $row['TOKEN'], $remote_user, array('employment'))) {
 				// Yes, we already have a valid ORCID and token.  Send a success message and exit
 				$html = $success_html;
 				require('../includes/template.php');
@@ -96,7 +97,7 @@ if (isset($_GET['error'])) {
 		'given_names' => $shib_gn,
 		'family_names' => $shib_ln,
 		'email' => $shib_mail,
-		'orcid' => $row['ORCID']
+		'orcid' => isset($row['ORCID']) ? $row['ORCID'] : '',
 	));
 	header('Location: ' . $url);
 	exit();
@@ -133,7 +134,8 @@ $result = curl_exec($curl);
 $info = curl_getinfo($curl);
 $response = json_decode($result, true);
 if (isset($response['orcid'])) {
-	if (!validate_record($response['orcid'], $response['access_token'], $remote_user)) {
+	// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
+	if (!validate_record($response['orcid'], $response['access_token'], $remote_user, array('employment'))) {
 		$html = array(
 			'p' => array('Something\'s not quite right.  We couldn\'t access your record.  Can you try to <a href="/?state=connect">Link your ORCID @ Pitt</a> again?'),
 			'orcid_url' => ORCID_LOGIN,

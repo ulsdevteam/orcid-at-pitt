@@ -107,11 +107,11 @@ function write_extid($orcid, $token, $id) {
  * 
  * @param string $orcid ORCID Id
  * @param string $token ORCID access token
- * @param string $id External ID
+ * @param string $type Affiliation type
  * @return boolean success
  */
 function write_affiliation($orcid, $token, $type) {
-	if ($type != 'employment') {
+	if ($type != 'employment' && $type != 'education') {
 		return true;
 	}
 	$payload = '<?xml version="1.0" encoding="UTF-8"?>
@@ -205,9 +205,10 @@ function read_extid($xml) {
  * 
  * @param string $orcid
  * @param string $token
+ * @param array $affiliations
  * @return true if record could be validated; false if any error occurred
  */
-function validate_record($orcid, $token, $user) {
+function validate_record($orcid, $token, $user, $affiliations = array()) {
 	$profile = read_profile($orcid, $token);
 	if ($profile) {
 		if (!read_extid($profile)) {
@@ -215,9 +216,11 @@ function validate_record($orcid, $token, $user) {
 				return false;
 			}
 		}
-		if (!read_affiliation($profile, 'employment')) {
-			if (!write_affiliation($orcid, $token, 'employment')) {
-				return false;
+		foreach ($affiliations as $affiliation) {
+			if (!read_affiliation($profile, $affiliation)) {
+				if (!write_affiliation($orcid, $token, $affiliation)) {
+					return false;
+				}
 			}
 		}
 		return true;
