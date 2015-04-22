@@ -96,19 +96,19 @@ article h1 {
 }
 
 #foot-center p a.footer-button {
-  background: url(../images/button_sprite.png) no-repeat -16px -133px; 
-}
-
-#foot-center p a.footer-button:hover {
-  background: url(../images/button_sprite.png) no-repeat -124px -133px;
-}
-
-#foot-right p a.footer-button {
   background: url(../images/button_sprite.png) no-repeat -16px -242px; 
 }
 
-#foot-right p a.footer-button:hover {
+#foot-center p a.footer-button:hover {
   background: url(../images/button_sprite.png) no-repeat -124px -242px;
+}
+
+#foot-right p a.footer-button {
+  background: url(../images/button_sprite.png) no-repeat -16px -133px; 
+}
+
+#foot-right p a.footer-button:hover {
+  background: url(../images/button_sprite.png) no-repeat -124px -133px;
 }
 
 .actionbutton {

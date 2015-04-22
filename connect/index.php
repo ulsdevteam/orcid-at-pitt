@@ -24,8 +24,8 @@ $shib_mail = filter_var($_SERVER['mail'], FILTER_SANITIZE_EMAIL);
 
 // This default success message will be used multiple places
 $success_html = array(
-	'header' => 'Thanks for getting your ORCID on!',
-	'p' => array('You\'re linked and good to go.'),
+	'header' => 'ORCID@Pitt success!',
+	'p' => array('Thank you-you have successfully created your ORCID ID and linked it to the University of Pittsburgh.', 'Now would be a good time to <a href="'.ORCID_LOGIN.'">log into your ORCID profile</a> and invest a few minutes in adding important information to help identify you and your research. ', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID ID, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website</a>.', 'Thank you for participating in this important university initiative.'),
 	'orcid_url' => ORCID_LOGIN,
 );
 
@@ -35,12 +35,21 @@ if (isset($_GET['error'])) {
 		case 'access_denied':
 			// user explicitly denied us access (maybe)
 			// ORCID's workflow is a little off - a user can click deny without actually logging in
-			// TODO: should we re-verify permissions here to prevent clearing a valid permission?
-			// Clear the existing token
-			execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => $remote_user, 'token' => ''));
+			// Clear the existing token if we've lost permission
+			$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => $remote_user));
+			if (is_array($row)) {
+				// Yes, the user exists.  Do we already have a valid ORCID and token?
+				if (isset($row['ORCID']) && isset($row['TOKEN'])) {
+					// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
+					if (!validate_record($row['ORCID'], $row['TOKEN'], $remote_user, array('employment'))) {
+						execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => $remote_user, 'token' => ''));
+					}
+				}
+			}
 			// Ask if the user meant to do that
 			$html = array(
-				'p' => array('Did you really mean to deny access to your record?  If not, click here to <a href="/?state=connect">Link your ORCID @ Pitt</a>'),
+				'header' => 'ORCID@Pitt Trusted Party Status',
+				'p' => array('Thank you for creating your ORCID ID and linking it to the University of Pittsburgh.', 'However, you chose not to grant trusted party status to Pitt, thus not allowing the university to access your ORCID ID.', 'Allowing Pitt to be a trusted party will help you and the university with a number of tasks-from reporting and benchmarking to discovery and access. For example, treating Pitt as a trusted party will enable university information systems to know your ORCID ID and view your researcher profile.', 'If you would like to grant Pitt trusted party status or add information to your ORCID profile, please <a href="/connect">restart this process</a>.', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID ID, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website.</a>'),
 				'orcid_url' => ORCID_LOGIN,
 			);
 			require('../includes/template.php');
@@ -136,12 +145,7 @@ $response = json_decode($result, true);
 if (isset($response['orcid'])) {
 	// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
 	if (!validate_record($response['orcid'], $response['access_token'], $remote_user, array('employment'))) {
-		$html = array(
-			'p' => array('Something\'s not quite right.  We couldn\'t access your record.  Can you try to <a href="/?state=connect">Link your ORCID @ Pitt</a> again?'),
-			'orcid_url' => ORCID_LOGIN,
-		);
-		require('../includes/template.php');
-		exit();
+		die_with_error_page('500 ORCID Validation error');
 	}
 	// Update ORCID and TOKEN as returned
 	execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, ORCID = :orcid, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => $remote_user, 'token' => $response['access_token'], 'orcid' => $response['orcid']));
@@ -149,11 +153,7 @@ if (isset($response['orcid'])) {
 	die_with_error_page('500 ORCID API connection error');
 }
 
-$html = array(
-	'header' => 'Thanks for getting your ORCID on!',
-	'p' => array('You\'re linked and good to go.'),
-	'orcid_url' => ORCID_LOGIN,
-);
+$html = $success_html;
 require('../includes/template.php');
 exit();
 ?>

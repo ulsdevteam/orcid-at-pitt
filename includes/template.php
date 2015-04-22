@@ -43,19 +43,19 @@
   </section>
 <footer>
   <div id="foot-left">
-    <h2>Go to Orcid</h2>
-    <p>Sed non massa non dolor volutpat imperdiet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pretium aliquam sem eget porta. Etiam ac arcu sem.</p>
-    <p><a href="<?php echo $html['orcid_url']; ?>" class="footer-button">ORCID website.</a></p>
+    <h2>What is ORCID?</h2>
+    <p>ORCID is a unique, persistent identifier for researchers—an ID number that can help make your scholarship easier to find and attribute.</p>
+    <p><a href="<?php echo $html['orcid_url']; ?>" class="footer-button">Learn more about ORCID.</a></p>
   </div>
   <div id="foot-center">
-    <h2>Get Help</h2>
-    <p>Aenean risus dui, suscipit eget vestibulum quis, fermentum vel est. Proin eget viverra tortor. Nullam dignissim risus eu faucibus congue.</p>
-    <p><a href="#" class="footer-button">Get help.</a></p>
+    <h2>ORCID@Pitt</h2>
+    <p>Find out more about the benefits of ORCID and the university’s effort to encourage Pitt researchers to create an ORCID ID, use it with their scholarship, and connect their ID with Pitt.</p>
+    <p><a href="http://www.library.pitt.edu/orcid" class="footer-button">Get help.</a></p>
   </div>
   <div id="foot-right">
-    <h2>Pitt Orcid</h2>
-    <p>Sed laoreet lacus non metus iaculis molestie. Sed dictum blandit ante, eu porttitor massa fermentum blandit. </p>
-    <p><a href="http://www.library.pitt.edu/orcid" class="footer-button">Pitt Orcid.</a></p>
+    <h2>Get Help.</h2>
+    <p>If you need help with creating your ORCID ID or have further questions, please contact us.</p>
+    <p><a href="mailto:orcidcomm@mail.pitt.edu" class="footer-button">orcidcomm@mail.pitt.edu</a></p>
   </div>
 </footer>
 </div><!-- /end wrapper -->
