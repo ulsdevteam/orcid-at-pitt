@@ -69,8 +69,8 @@ if (isset($_GET['error'])) {
 	//   A redirect to the success message
 	//   A pass through to the sendoff to ORCID
 	// Does this user exist?
-	$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => $remote_user));
-	if (is_array($row)) {
+	$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN, USERNAME FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => $remote_user));
+	if (is_array($row) && $row['USERNAME']) {
 		// Yes, the user exists.  Do we already have a valid ORCID and token?
 		if (isset($row['ORCID']) && isset($row['TOKEN'])) {
 			// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
