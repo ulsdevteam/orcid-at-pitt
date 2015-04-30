@@ -42,20 +42,21 @@
     ?>
   </section>
 <footer>
-  <div id="foot-left">
+  <div class="foot-col">
     <h2>What is ORCID?</h2>
     <p>ORCID is a unique, persistent identifier for researchers—an ID number that can help make your scholarship easier to find and attribute.</p>
-    <p><a href="<?php echo $html['orcid_url']; ?>" class="footer-button">Learn more about ORCID.</a></p>
+    <p><a href="<?php echo $html['orcid_url']; ?>">Learn more about ORCID.</a></p>
   </div>
-  <div id="foot-center">
+  <div class="foot-col">
     <h2>ORCID@Pitt</h2>
     <p>Find out more about the benefits of ORCID and the university’s effort to encourage Pitt researchers to create an ORCID ID, use it with their scholarship, and connect their ID with Pitt.</p>
-    <p><a href="http://www.library.pitt.edu/orcid" class="footer-button">Get help.</a></p>
+    <p class="foo"><a href="http://www.library.pitt.edu/orcid">Discover ORCID@Pitt.</a></p>
   </div>
-  <div id="foot-right">
+  <div class="foot-col">
     <h2>Get Help.</h2>
     <p>If you need help with creating your ORCID ID or have further questions, please contact us.</p>
-    <p><a href="mailto:orcidcomm@mail.pitt.edu" class="footer-button">orcidcomm@mail.pitt.edu</a></p>
+    <p><a href="mailto:orcidcomm@mail.pitt.edu">orcidcomm@mail.pitt.edu</a></p>
+  </div>
   </div>
 </footer>
 </div><!-- /end wrapper -->
