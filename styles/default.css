@@ -47,7 +47,7 @@ footer {
 	text-transform: uppercase;
 	}
 
-.foot-col p a {
+.foot-col p.linker a {
 	background: #3498db;
   background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
   background-image: -moz-linear-gradient(top, #3498db, #2980b9);
@@ -64,7 +64,7 @@ footer {
 	text-decoration: none;
 	}
 	
-	.foot-col p a:hover {
+	.foot-col p.linker a:hover {
 	background: #3cb0fd;
   background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
   background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
@@ -97,7 +97,6 @@ footer {
 header h1 {
 	text-align: center;
 	border-bottom: 1px solid #000154;
-	margin-top: -.6em;
 	}
 	
 article h1 {
@@ -172,3 +171,9 @@ article h1 {
 	position: relative;
 	width: 15em;
 	}*/
+
+.foot-col h2 { height: 0; }
+.foot-col p.descr { height: inherit; margin: 3em 1em 3em 1em; }
+.foot-col p.linker { height: 0; margin-top: -3em;}
+.foot-col { height: 8em; }
+

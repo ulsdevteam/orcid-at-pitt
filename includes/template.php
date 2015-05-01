@@ -44,19 +44,18 @@
 <footer>
   <div class="foot-col">
     <h2>What is ORCID?</h2>
-    <p>ORCID is a unique, persistent identifier for researchers—an ID number that can help make your scholarship easier to find and attribute.</p>
-    <p><a href="<?php echo $html['orcid_url']; ?>">Learn more about ORCID.</a></p>
+    <p class="descr">ORCID provides a unique, persistent identifier for researchers—an ID number that can help make your scholarship easier to find and attribute.</p>
+    <p class="linker"><a href="https://orcid.org/">Learn more about ORCID</a></p>
   </div>
   <div class="foot-col">
     <h2>ORCID@Pitt</h2>
-    <p>Find out more about the benefits of ORCID and the university’s effort to encourage Pitt researchers to create an ORCID ID, use it with their scholarship, and connect their ID with Pitt.</p>
-    <p class="foo"><a href="http://www.library.pitt.edu/orcid">Discover ORCID@Pitt.</a></p>
+    <p class="descr">Find out more about the benefits of an ORCID iD and the university’s effort to encourage Pitt researchers to create an ORCID iD, use it with their scholarship, and connect their ORCID iD with Pitt.</p>
+    <p class="linker"><a href="http://www.library.pitt.edu/orcid">Discover ORCID@Pitt</a></p>
   </div>
   <div class="foot-col">
     <h2>Get Help.</h2>
-    <p>If you need help with creating your ORCID ID or have further questions, please contact us.</p>
-    <p><a href="mailto:orcidcomm@mail.pitt.edu">orcidcomm@mail.pitt.edu</a></p>
-  </div>
+    <p class="descr">If you need help with creating your ORCID iD or have further questions, please contact us.</p>
+    <p class="linker"><a href="mailto:orcidcomm@mail.pitt.edu">orcidcomm@mail.pitt.edu</a></p>
   </div>
 </footer>
 </div><!-- /end wrapper -->

@@ -235,9 +235,8 @@ function die_with_error_page($error) {
 	header(SERVER_PROTOCOL.' '.$error);
 	$html = array(
 		'header' => 'ORCID@Pitt Problem',
-		'p' => array('Our apologies. Something went wrong and we were unable to create an ORCID ID for you and link it to the University of Pittsburgh.', 'Please <a href="/connect">try again</a>.', 'If you need assistance with creating your ORCID ID, please contact the ORCID Communications Group (<a href="mailto:orcidcomm@mail.pitt.edu">orcidcomm@mail.pitt.edu</a>).', 'Thank you for your patience.'),
+		'p' => array('Our apologies. Something went wrong and we were unable to create an ORCID iD for you and link it to the University of Pittsburgh.', 'Please <a href="/connect">try again</a>.', 'If you need assistance with creating your ORCID iD, please contact the ORCID Communications Group (<a href="mailto:orcidcomm@mail.pitt.edu">orcidcomm@mail.pitt.edu</a>).', 'Thank you for your patience.'),
 		'error' => array($error.' - '.date("Y-m-d H:i:s")),
-		'orcid_url' => ORCID_LOGIN,
 	);
 	require('../includes/template.php');
 	exit();

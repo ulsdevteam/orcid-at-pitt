@@ -25,8 +25,7 @@ $shib_mail = filter_var($_SERVER['mail'], FILTER_SANITIZE_EMAIL);
 // This default success message will be used multiple places
 $success_html = array(
 	'header' => 'ORCID@Pitt success!',
-	'p' => array('Thank you-you have successfully created your ORCID ID and linked it to the University of Pittsburgh.', 'Now would be a good time to <a href="'.ORCID_LOGIN.'">log into your ORCID profile</a> and invest a few minutes in adding important information to help identify you and your research. ', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID ID, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website</a>.', 'Thank you for participating in this important university initiative.'),
-	'orcid_url' => ORCID_LOGIN,
+	'p' => array('Thank you-you have successfully created your ORCID iD and linked it to the University of Pittsburgh.', 'Now would be a good time to <a href="'.ORCID_LOGIN.'">log into your ORCID Record</a> and invest a few minutes in adding important information to help identify you and your research. ', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID iD, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website</a>.', 'Thank you for participating in this important university initiative.'),
 );
 
 // Check for ORCID sending us an error message
@@ -49,8 +48,7 @@ if (isset($_GET['error'])) {
 			// Ask if the user meant to do that
 			$html = array(
 				'header' => 'ORCID@Pitt Trusted Party Status',
-				'p' => array('Thank you for creating your ORCID ID and linking it to the University of Pittsburgh.', 'However, you chose not to grant trusted party status to Pitt, thus not allowing the university to access your ORCID ID.', 'Allowing Pitt to be a trusted party will help you and the university with a number of tasks-from reporting and benchmarking to discovery and access. For example, treating Pitt as a trusted party will enable university information systems to know your ORCID ID and view your researcher profile.', 'If you would like to grant Pitt trusted party status or add information to your ORCID profile, please <a href="/connect">restart this process</a>.', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID ID, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website.</a>'),
-				'orcid_url' => ORCID_LOGIN,
+				'p' => array('Thank you for creating your ORCID iD and linking it to the University of Pittsburgh.', 'However, you chose not to grant trusted party status to Pitt, thus not allowing the university to access your ORCID iD.', 'Allowing Pitt to be a trusted party will help you and the university with a number of tasks-from reporting and benchmarking to discovery and access. For example, treating Pitt as a trusted party will enable university information systems to know your ORCID iD and view your researcher profile.', 'If you would like to grant Pitt trusted party status or add information to your ORCID profile, please <a href="/connect">restart this process</a>.', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID iD, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website.</a>'),
 			);
 			require('../includes/template.php');
 			exit();
