@@ -44,7 +44,7 @@
 <footer>
   <div class="foot-col">
     <h2>What is ORCID?</h2>
-    <p class="descr">ORCID provides a unique, persistent identifier for researchers—an ID number that can help make your scholarship easier to find and attribute.</p>
+    <p class="descr">ORCID provides a unique, persistent identifier that can help make your scholarship easier to find and attribute.</p>
     <p class="linker"><a class="actionbutton" href="https://orcid.org/">Learn more about ORCID</a></p>
   </div>
   <div class="foot-col">
