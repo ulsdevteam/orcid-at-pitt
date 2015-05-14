@@ -1,7 +1,4 @@
 <?php
-  if (!isset($html['title'])) {
-    $html['title'] = 'ORCID @ Pitt';
-  }
   if (!isset($html['error'])) {
     $html['error'] = array();
   }
@@ -14,13 +11,14 @@
 ?><!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
-<title><?php echo (isset($html['subtitle']) ? $html['subtitle'].' - ' : '').$html['title']; ?></title>
+<title>ORCID @ Pitt</title>
 <link href="/styles/default.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<div id="pitt-header" class="blue"><div id="pittlogo"><a id="p-link" title="University of Pittsburgh" href="http://pitt.edu/">University of Pittsburgh</a></div></div>
 <div id="wrapper">
   <header>
-    <h1><?php echo (isset($html['subtitle']) ? $html['subtitle'].' - ' : '').$html['title']; ?></h1>
+    <h1><img src="/images/header.jpg">ORCID @ Pitt</h1>
   </header>
   <section>
     <?php

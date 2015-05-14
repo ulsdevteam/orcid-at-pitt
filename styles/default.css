@@ -1,34 +1,99 @@
 /* CSS Document */
 
 body {
-	margin: 2em auto;
-	width: 95%;
-	background: url(/images/blue_orchid_opt.jpg) no-repeat center center fixed;
+	margin: 0px auto;
+	width:100%;
+	height:100%;
+	min-height:800px;
+	background: url(/images/bg.png) no-repeat center center fixed;
 	background-size: cover;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-family: Verdana,Tahoma,"DejaVu Sans",sans-serif;;
 }
+
+#pitt-header.blue {
+	background-color:#111155;
+	height:66px;
+	width:100%;
+	min-width:320px;
+	margin:0px auto;
+}
+
+#pittlogo {
+	background-image:url(/images/pitt-logo-bluebkg.gif);
+	background-repeat: no-repeat;
+	background-position:left;
+	background-color:#111155;
+	height:66px;
+	width:84%;
+	min-width:320px;
+	margin:0px auto;
+}
+
+#pitt-header {
+	height: 66px;
+	width: 960px;
+	margin: 0px;
+	position: relative;
+	text-indent: -1000em;
+	}
 	
+#p-link {
+	 position: absolute;
+	top: 0px;
+	left: 120px;
+	height: 66px;
+	width: 279px;
+}	
+
 #wrapper {
-	width: 70%;
-	margin: 0 auto;
+	width: 80%;
+	margin: 0px auto;
 	background: #fff;
-	padding: 1em;
+	padding: 0em 2em 2em 2em;
+	height:900px;
+	border-top:7px solid #CCCC9A;
+	background-image: url('/images/bg_border.jpg'), url('/images/bg_border.jpg');
+	background-repeat: no-repeat, no-repeat;
+	background-position: left top, right top;
+	background-color: #FFF;
 }
 
 header h1 {
 	text-align: center;
-	border-bottom: 1px solid #000154;
+	border-bottom: 1px dashed #999;
+	font-family:"MuseoSlab500Regular","museo-slab","Rockwell",sans-serif;
+	font-weight: normal;
+	font-size: 0px;
+	color:#fff;
+	padding-bottom:20px;
+	margin-bottom:30px;
+}
+
+header {
+	width:100%;
+	
 }
 
 section {
-	background: #98ccfc;
-	padding: .5em 2em 3em;
-	margin-top: 1em;
-	min-height: 300px;
+	padding-top:3%;
+	padding-left:2%;
+	min-height: 250px;
 	text-align: center;
+	color:#000;
+	background: none repeat scroll 0px 0px #F2F2E5;
+	border: 7px solid #FFF;
+	margin: 0px auto 30px;
+	box-shadow: 0px 1px 6px 0px #4D4D4D;
+}
+
+section h2 {
+	font-family:"MuseoSlab500Regular","museo-slab","Rockwell",sans-serif;
+	font-weight:normal;
+	font-size:24px;
+	color:#000;
 }
 
 .errormessage {
@@ -45,6 +110,8 @@ footer {
 	display: -webkit-flex;
 	display: flex;
 	flex-flow: row wrap;
+	border-top:1px dashed #999;
+	margin-top:2%;
 }
 
 .foot-col {
@@ -53,57 +120,73 @@ footer {
 	-webkit-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
-	padding: 1em;
 	position: relative;
 	min-width: 250px;
-	text-align: center;
+	min-height:225px;
+	text-align: left;
+	margin: 20px;
+	box-shadow: 1px 2px 5px 3px #ADADAD;
+	border: 7px solid #FFF;
+	position: relative;
+	padding: 15px 20px 0px;
+	background-image: url('/images/block_gradient.png');
+	background-repeat: repeat-x;
+	background-color: #000741;
+	color:#E5E5CB;
 }
 
 .foot-col p {
-	text-transform: uppercase;
+	text-transform: normal;
+}
+
+.foot-col h2{
+	border-bottom: 1px dashed #999;
+	padding-bottom: 8px !important;
+	margin-bottom: 10px !important;
+	font-size: 1.6em !important;
+	font-family:"MuseoSlab500Regular","museo-slab","Rockwell",sans-serif;
+	font-weight:normal;
 }
 
 .descr {
-	margin-bottom: 3em;
+	margin-bottom: 2em;
 }
 
 .linker {
 	position: absolute;
-	bottom: 0;
+	bottom: 30px;
 	left: 0;
 	text-align: center;
 	width: 100%;
-	margin-bottom: 2em;
 }
 
 .actionbutton {
 	white-space: nowrap;
-	background: #3498db;
-	background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-	background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-	background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-	background-image: -o-linear-gradient(top, #3498db, #2980b9);
-	background-image: linear-gradient(to bottom, #3498db, #2980b9);
+	background-image: -webkit-linear-gradient(top, #385ee0, #0029B6);
+	background-image: -moz-linear-gradient(top, #385ee0, #0029B6);
+	background-image: -ms-linear-gradient(top, #385ee0,#0029B6);
+	background-image: -o-linear-gradient(top, #385ee0, #0029B6);
+	background-image: linear-gradient(to bottom, #385ee0, #0029B6);
 	-webkit-border-radius: 2em;
 	-moz-border-radius: 2em;
 	border-radius: 2em;
 	font-family: Arial;
-	color: #ffffff;
+	color: #fff;
 	font-size: 120%;
 	padding: .75em 1.25em .75em 1.25em;
 	text-decoration: none;
 	position: relative;
 	top: 1em;
+
 }
 
 .actionbutton:hover {
-	background: #3cb0fd;
 	color: #ddce9e;
-	background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
-	background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
-	background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
-	background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
-	background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+	background-image: -webkit-linear-gradient(top, #0029B6, 385ee0);
+	background-image: -moz-linear-gradient(top, #0029B6, 385ee0);
+	background-image: -ms-linear-gradient(top, #0029B6, 385ee0);
+	background-image: -o-linear-gradient(top, #0029B6, 385ee0);
+	background-image: linear-gradient(to bottom, #0029B6, 385ee0);
 	text-decoration: none;
 	position: relative;
 	top: 1em;
