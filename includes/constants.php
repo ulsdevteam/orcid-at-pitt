@@ -12,24 +12,35 @@ define ('PITT_AFFILIATION_KEY', 'RINGGOLD');
 define ('PITT_AFFILIATION_ID', '6614');
 
 // Construct sendoff to ORCID
-define('OAUTH_CLIENT_ID', 'REPLACED_KEY');
-define('OAUTH_CLIENT_SECRET', 'REPLACED_TOKEN');
 define('OAUTH_SCOPE', '/orcid-profile/read-limited /orcid-bio/external-identifiers/create /affiliations/create');
-define('OAUTH_REDIRECT_URI', 'https://orcid-dev.pitt.edu/connect'); // URL of the target script
 define('ORCID_PRODUCTION', false); // sandbox; change to true when ready to leave the sandbox
 
 if (ORCID_PRODUCTION) {
+	// production credentials
+	define('OAUTH_CLIENT_ID', 'REPLACED_KEY');
+	define('OAUTH_CLIENT_SECRET', 'REPLACED_TOKEN');
 	// production endpoints
 	define('OAUTH_AUTHORIZATION_URL', 'https://orcid.org/oauth/authorize');
 	define('OAUTH_TOKEN_URL', 'https://api.orcid.org/oauth/token'); // members
 	define('OAUTH_API_URL', 'https://api.orcid.org/v1.2/'); // members
 	define('ORCID_LOGIN', 'https://orcid.org/my-orcid');
+	// production values
+	define('OAUTH_REDIRECT_URI', 'https://orcid.pitt.edu/connect'); // URL of the target script
+	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = REPLACED_DNS)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = REPLACED_SERVICE)))'); // TNS for the Oracle Connection
+	define('DB_PASSWD', 'REPLACED_PASSWORD'); // Oracle Database password
 } else {
+	// sandbox credentials
+	define('OAUTH_CLIENT_ID', 'REPLACED_KEY');
+	define('OAUTH_CLIENT_SECRET', 'REPLACED_TOKEN');
 	// sandbox endpoints
 	define('OAUTH_AUTHORIZATION_URL', 'https://sandbox.orcid.org/oauth/authorize');
 	define('OAUTH_TOKEN_URL', 'https://api.sandbox.orcid.org/oauth/token'); // members
 	define('OAUTH_API_URL', 'https://api.sandbox.orcid.org/v1.2/'); // members
 	define('ORCID_LOGIN', 'https://sandbox.orcid.org/my-orcid');
+	// development values
+	define('OAUTH_REDIRECT_URI', 'https://orcid-dev.pitt.edu/connect'); // URL of the target script
+	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = REPLACED_DNS)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = REPLACED_SERVICE)))'); // TNS for the Oracle Connection
+	define('DB_PASSWD', 'REPLACED_PASSWORD'); // Oracle Database password
 }
 
 /**
@@ -111,7 +122,7 @@ function write_extid($orcid, $token, $id) {
  * @return boolean success
  */
 function write_affiliation($orcid, $token, $type) {
-	if ($type != 'employment' && $type != 'education') {
+	if ($type !== 'employment' && $type !== 'education') {
 		return true;
 	}
 	$payload = '<?xml version="1.0" encoding="UTF-8"?>

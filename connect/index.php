@@ -2,8 +2,7 @@
 require('../includes/constants.php');
 
 // Let's get a resusable database connection
-$db = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = REPLACED_DNS)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = REPLACED_SERVICE)))" ;
-$conn = oci_connect('ORCIDWEB','REPLACED_PASSWORD', $db);
+$conn = oci_connect('ORCIDWEB',DB_PASSWD, DB_TNS);
 if (!$conn) {
 	error_log(var_export(oci_error(), true));
 	die_with_error_page('500 Database connection error');
@@ -21,6 +20,16 @@ $shib_gn = filter_var($_SERVER['givenName'], FILTER_SANITIZE_STRING);
 $shib_mn = filter_var($_SERVER['middleName'], FILTER_SANITIZE_STRING);
 $shib_ln = filter_var($_SERVER['sn'], FILTER_SANITIZE_STRING);
 $shib_mail = filter_var($_SERVER['mail'], FILTER_SANITIZE_EMAIL); 
+$shib_affiliations = explode(';', filter_var($_SERVER['PittAffiliate'], FILTER_SANITIZE_STRING)); 
+// Translate Pitt affiliations of student, employee into valid ORCID affiliations of employment, education
+// We do not release educational information to ORCID
+if (in_array('employee', $shib_affiliations, TRUE) || in_array('faculty', $shib_affiliations, TRUE) || in_array('staff', $shib_affiliations, TRUE)) {
+	$orcid_affiliations = array('employment');
+} else if (in_array('student', $shib_affiliations, TRUE)) {
+	$orcid_affiliations = array();
+} else {
+	$orcid_affiliations = array();
+}
 
 // This default success message will be used multiple places
 $success_html = array(
@@ -39,8 +48,7 @@ if (isset($_GET['error'])) {
 			if (is_array($row)) {
 				// Yes, the user exists.  Do we already have a valid ORCID and token?
 				if (isset($row['ORCID']) && isset($row['TOKEN'])) {
-					// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
-					if (!validate_record($row['ORCID'], $row['TOKEN'], $remote_user, array('employment'))) {
+					if (!validate_record($row['ORCID'], $row['TOKEN'], $remote_user, $orcid_affiliations)) {
 						execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => $remote_user, 'token' => ''));
 					}
 				}
@@ -71,8 +79,7 @@ if (isset($_GET['error'])) {
 	if (is_array($row) && $row['USERNAME']) {
 		// Yes, the user exists.  Do we already have a valid ORCID and token?
 		if (isset($row['ORCID']) && isset($row['TOKEN'])) {
-			// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
-			if (validate_record($row['ORCID'], $row['TOKEN'], $remote_user, array('employment'))) {
+			if (validate_record($row['ORCID'], $row['TOKEN'], $remote_user, $orcid_affiliations)) {
 				// Yes, we already have a valid ORCID and token.  Send a success message and exit
 				$html = $success_html;
 				require('../includes/template.php');
@@ -89,7 +96,7 @@ if (isset($_GET['error'])) {
 
 	// For the ORCID sandbox, use mailinator URLS
 	if (!ORCID_PRODUCTION) {
-		$shib_mail = str_replace('@', 'AT', $shib_mail).'@mailinator.com';
+		$shib_mail = str_replace('@', '.', $shib_mail).'@mailinator.com';
 	}
 
 	// redirect to ORCID
@@ -141,8 +148,7 @@ $result = curl_exec($curl);
 $info = curl_getinfo($curl);
 $response = json_decode($result, true);
 if (isset($response['orcid'])) {
-	// TODO: pass a variable parsed from Shib indicating the associations of the user.  array('employment') is for testing only!
-	if (!validate_record($response['orcid'], $response['access_token'], $remote_user, array('employment'))) {
+	if (!validate_record($response['orcid'], $response['access_token'], $remote_user, $orcid_affiliations)) {
 		die_with_error_page('500 ORCID Validation error');
 	}
 	// Update ORCID and TOKEN as returned
