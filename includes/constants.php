@@ -26,6 +26,7 @@ if (ORCID_PRODUCTION) {
 	define('ORCID_LOGIN', 'https://orcid.org/my-orcid');
 	// production values
 	define('OAUTH_REDIRECT_URI', 'https://orcid.pitt.edu/connect'); // URL of the target script
+	define('EXTERNAL_WEBHOOK', 'REPLACED_URL); // URL of the target script
 	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = REPLACED_DNS)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = REPLACED_SERVICE)))'); // TNS for the Oracle Connection
 	define('DB_PASSWD', 'REPLACED_PASSWORD'); // Oracle Database password
 } else {
@@ -39,6 +40,7 @@ if (ORCID_PRODUCTION) {
 	define('ORCID_LOGIN', 'https://sandbox.orcid.org/my-orcid');
 	// development values
 	define('OAUTH_REDIRECT_URI', 'https://orcid-dev.pitt.edu/connect'); // URL of the target script
+	define('EXTERNAL_WEBHOOK', 'REPLACED_URL'); // URL of the target script
 	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = REPLACED_DNS)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = REPLACED_SERVICE)))'); // TNS for the Oracle Connection
 	define('DB_PASSWD', 'REPLACED_PASSWORD'); // Oracle Database password
 }
@@ -90,6 +92,7 @@ function write_extid($orcid, $token, $id) {
 					<external-identifier>
 						<external-id-common-name>'.PITT_EXTID_NAME.'</external-id-common-name>
 						<external-id-reference>'.$id.'</external-id-reference>
+						<external-id-url>'.EXTERNAL_WEBHOOK.'?id='.$id.'</external-id-url>
 					</external-identifier>
 				</external-identifiers>
 			</orcid-bio>
