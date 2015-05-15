@@ -44,12 +44,12 @@ if (isset($_GET['error'])) {
 			// user explicitly denied us access (maybe)
 			// ORCID's workflow is a little off - a user can click deny without actually logging in
 			// Clear the existing token if we've lost permission
-			$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => $remote_user));
+			$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => strtoupper($remote_user)));
 			if (is_array($row)) {
 				// Yes, the user exists.  Do we already have a valid ORCID and token?
 				if (isset($row['ORCID']) && isset($row['TOKEN'])) {
 					if (!validate_record($row['ORCID'], $row['TOKEN'], $remote_user, $orcid_affiliations)) {
-						execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => $remote_user, 'token' => ''));
+						execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => strtoupper($remote_user), 'token' => ''));
 					}
 				}
 			}
@@ -75,7 +75,7 @@ if (isset($_GET['error'])) {
 	//   A redirect to the success message
 	//   A pass through to the sendoff to ORCID
 	// Does this user exist?
-	$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN, USERNAME FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => $remote_user));
+	$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN, USERNAME FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => strtoupper($remote_user)));
 	if (is_array($row) && $row['USERNAME']) {
 		// Yes, the user exists.  Do we already have a valid ORCID and token?
 		if (isset($row['ORCID']) && isset($row['TOKEN'])) {
@@ -88,11 +88,11 @@ if (isset($_GET['error'])) {
 		}
 	} else {
 		// This user doesn't exist yet.  Add them.
-		execute_query_or_die($conn, 'INSERT INTO ULS.ORCID_USERS (USERNAME, CREATED, MODIFIED) VALUES (:shibUser, SYSDATE, SYSDATE)', array('shibUser' => $remote_user));
+		execute_query_or_die($conn, 'INSERT INTO ULS.ORCID_USERS (USERNAME, CREATED, MODIFIED) VALUES (:shibUser, SYSDATE, SYSDATE)', array('shibUser' => strtoupper($remote_user)));
 	}
 
 	// If we haven't exited to this point, note that the user has visited and we are going to redirect them to ORCID
-	execute_query_or_die($conn, 'INSERT INTO ULS.ORCID_STATUSES (ORCID_USER_ID, ORCID_STATUS_TYPE_ID, STATUS_TIMESTAMP) SELECT ORCID_USERS.ID, ORCID_STATUS_TYPES.ID, SYSDATE FROM ULS.ORCID_USERS JOIN ULS.ORCID_STATUS_TYPES ON (ORCID_USERS.USERNAME = :shibUser AND ORCID_STATUS_TYPES.SEQ = 2) WHERE NOT EXISTS (SELECT ORCID_STATUSES.ID FROM ULS.ORCID_STATUSES WHERE ORCID_STATUSES.ORCID_STATUS_TYPE_ID = ORCID_STATUS_TYPES.ID AND ORCID_STATUSES.ORCID_USER_ID = ORCID_USERS.ID)', array('shibUser' => $remote_user));
+	execute_query_or_die($conn, 'INSERT INTO ULS.ORCID_STATUSES (ORCID_USER_ID, ORCID_STATUS_TYPE_ID, STATUS_TIMESTAMP) SELECT ORCID_USERS.ID, ORCID_STATUS_TYPES.ID, SYSDATE FROM ULS.ORCID_USERS JOIN ULS.ORCID_STATUS_TYPES ON (ORCID_USERS.USERNAME = :shibUser AND ORCID_STATUS_TYPES.SEQ = 2) WHERE NOT EXISTS (SELECT ORCID_STATUSES.ID FROM ULS.ORCID_STATUSES WHERE ORCID_STATUSES.ORCID_STATUS_TYPE_ID = ORCID_STATUS_TYPES.ID AND ORCID_STATUSES.ORCID_USER_ID = ORCID_USERS.ID)', array('shibUser' => strtoupper($remote_user)));
 
 	// For the ORCID sandbox, use mailinator URLS
 	if (!ORCID_PRODUCTION) {
@@ -152,7 +152,7 @@ if (isset($response['orcid'])) {
 		die_with_error_page('500 ORCID Validation error');
 	}
 	// Update ORCID and TOKEN as returned
-	execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, ORCID = :orcid, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => $remote_user, 'token' => $response['access_token'], 'orcid' => $response['orcid']));
+	execute_query_or_die($conn, 'UPDATE ULS.ORCID_USERS SET MODIFIED = SYSDATE, ORCID = :orcid, TOKEN = :token WHERE USERNAME = :shibUser', array('shibUser' => strtoupper($remote_user), 'token' => $response['access_token'], 'orcid' => $response['orcid']));
 } else {
 	die_with_error_page('500 ORCID API connection error');
 }
