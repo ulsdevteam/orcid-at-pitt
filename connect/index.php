@@ -21,7 +21,9 @@ $shib_mn = filter_var($_SERVER['middleName'], FILTER_SANITIZE_STRING);
 $shib_ln = filter_var($_SERVER['sn'], FILTER_SANITIZE_STRING);
 $shib_mail = filter_var($_SERVER['mail'], FILTER_SANITIZE_EMAIL); 
 $shib_affiliations = explode(';', filter_var($_SERVER['PittAffiliate'], FILTER_SANITIZE_STRING)); 
+$shib_groups = explode(';', filter_var($_SERVER['PittGroups'], FILTER_SANITIZE_STRING)); 
 // Translate Pitt affiliations of student, employee into valid ORCID affiliations of employment, education
+// We'll also hijack this to add in a "group" of FERPA for Buckley Flag protections
 // We do not release educational information to ORCID
 if (in_array('employee', $shib_affiliations, TRUE) || in_array('faculty', $shib_affiliations, TRUE) || in_array('staff', $shib_affiliations, TRUE)) {
 	$orcid_affiliations = array('employment');
@@ -29,6 +31,9 @@ if (in_array('employee', $shib_affiliations, TRUE) || in_array('faculty', $shib_
 	$orcid_affiliations = array();
 } else {
 	$orcid_affiliations = array();
+}
+if (in_array('FERPA', $shib_groups, TRUE)) {
+	$orcid_affiliations[] = 'FERPA';
 }
 
 // This default success message will be used multiple places

@@ -121,7 +121,7 @@ function write_extid($orcid, $token, $id) {
  * 
  * @param string $orcid ORCID Id
  * @param string $token ORCID access token
- * @param string $type Affiliation type
+ * @param string $type Affiliation type (invalid types will be ignored)
  * @return boolean success
  */
 function write_affiliation($orcid, $token, $type) {
@@ -225,12 +225,19 @@ function read_extid($xml) {
 function validate_record($orcid, $token, $user, $affiliations = array()) {
 	$profile = read_profile($orcid, $token);
 	if ($profile) {
-		if (!read_extid($profile)) {
+		// The profile should have an External ID unless the the FERPA flag is present on a student-only record
+		if ((!in_array('FERPA', $affiliations) || in_array('employment', $affiliations)) && !read_extid($profile)) {
 			if (!write_extid($orcid, $token, $user)) {
 				return false;
 			}
 		}
+		// The profile should have each affiliation, unless the FERPA flag blocks a student affiliation
+		// It is up to the caller to only pass the desired affilaitions (e.g. writing employment but not education)
+		// write_affiliation will filter only valid ORCID profile affiliations (e.g. ignoring FERPA as a key)
 		foreach ($affiliations as $affiliation) {
+			if ($affiliation == 'education' && in_array('FERPA', $affiliations)) {
+				continue;
+			}
 			if (!read_affiliation($profile, $affiliation)) {
 				if (!write_affiliation($orcid, $token, $affiliation)) {
 					return false;
