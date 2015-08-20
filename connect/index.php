@@ -39,7 +39,7 @@ if (in_array('FERPA', $shib_groups, TRUE)) {
 // This default success message will be used multiple places
 $success_html = array(
 	'header' => 'ORCID@Pitt success!',
-	'p' => array('Thank you-you have successfully created your ORCID iD and linked it to the University of Pittsburgh.', 'Now would be a good time to <a href="'.ORCID_LOGIN.'">log into your ORCID Record</a> and invest a few minutes in adding important information to help identify you and your research. ', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID iD, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website</a>.', 'Thank you for participating in this important university initiative.'),
+	'p' => array('Thank you-you have successfully created your ORCID iD and linked it to the University of Pittsburgh.', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID iD, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website</a>.', 'Thank you for participating in this important university initiative.'),
 );
 
 // Check for ORCID sending us an error message
