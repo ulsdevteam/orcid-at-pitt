@@ -11,7 +11,8 @@ require('../includes/constants.php');
 $conn = oci_connect('ORCIDWEB',DB_PASSWD, DB_TNS);
 if (!$conn) {
 	error_log(var_export(oci_error(), true));
-	die_with_error_page('500 Database connection error');
+	header('500 Database connection error');
+	die('The database service is unavailable.');
 }
 $user = filter_var($_GET['user'], FILTER_SANITIZE_STRING);
 
@@ -24,7 +25,24 @@ if (is_array($row)) {
 	}
 }
 
-header('Content-type: application/json');
-print json_encode($result);
+if (isset($_GET['callback'])) {
+	// Sanity check JSONp callback
+	$callback = 'callback';
+	if ($_GET['callback']) {
+		// skips valid characters U+200C and U+200D
+		if (preg_match('/^[\$\w\p{Ll}\p{Lu}\p{Lt}\p{Lm}\p{Lo}\p{Nl}][\$\w\p{Ll}\p{Lu}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}]*$/u', $_GET['callback'])) {
+			$callback = $_GET['callback'];
+		} else {
+			error_log('callback failed sanity check: '.$_GET['callback']);
+			header('400 Bad callback in request');
+			die('The callback failed the sanity check.');
+		}
+	}
+	header('Content-type: application/javascript');
+	print $callback.'('.json_encode($result).')';
+} else {
+	header('Content-type: application/json');
+	print json_encode($result);
+}
 
 ?>
