@@ -15,6 +15,7 @@ if(filter_var($_SERVER['AUTH_TYPE']) !== 'shibboleth') {
 
 // Grab the remote user from Shibboleth
 $remote_user = filter_var($_SERVER['REMOTE_USER'], FILTER_SANITIZE_STRING);
+$remote_user = preg_replace('/@pitt.edu$/i', '', $remote_user);
 // Grab variables from Shibboleth
 $shib_gn = filter_var($_SERVER['givenName'], FILTER_SANITIZE_STRING);
 $shib_mn = filter_var($_SERVER['middleName'], FILTER_SANITIZE_STRING);
