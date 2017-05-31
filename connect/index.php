@@ -18,11 +18,11 @@ $remote_user = filter_var($_SERVER['REMOTE_USER'], FILTER_SANITIZE_STRING);
 $remote_user = preg_replace('/@pitt.edu$/i', '', $remote_user);
 // Grab variables from Shibboleth
 $shib_gn = filter_var($_SERVER['givenName'], FILTER_SANITIZE_STRING);
-$shib_mn = filter_var($_SERVER['middleName'], FILTER_SANITIZE_STRING);
+//$shib_mn = filter_var(isset($_SERVER['middleName']) ? $_SERVER['middleName'] : ''), FILTER_SANITIZE_STRING);
 $shib_ln = filter_var($_SERVER['sn'], FILTER_SANITIZE_STRING);
 $shib_mail = filter_var($_SERVER['mail'], FILTER_SANITIZE_EMAIL); 
 $shib_affiliations = explode(';', filter_var($_SERVER['PittAffiliate'], FILTER_SANITIZE_STRING)); 
-$shib_groups = explode(';', filter_var($_SERVER['PittGroups'], FILTER_SANITIZE_STRING)); 
+$shib_groups = explode(';', filter_var($_SERVER['PittCustomGroupMembership'], FILTER_SANITIZE_STRING)); 
 // Translate Pitt affiliations of student, employee into valid ORCID affiliations of employment, education
 // We'll also hijack this to add in a "group" of FERPA for Buckley Flag protections
 // We do not release educational information to ORCID
@@ -82,7 +82,7 @@ if (isset($_GET['error'])) {
 	//   A pass through to the sendoff to ORCID
 	// Does this user exist?
 	$row = execute_query_or_die($conn, 'SELECT ORCID, TOKEN, USERNAME FROM ULS.ORCID_USERS WHERE USERNAME = :shibUser', array('shibUser' => strtoupper($remote_user)));
-	if (is_array($row) && $row['USERNAME']) {
+	if (is_array($row) && isset($row['USERNAME'])) {
 		// Yes, the user exists.  Do we already have a valid ORCID and token?
 		if (isset($row['ORCID']) && isset($row['TOKEN'])) {
 			if (validate_record($row['ORCID'], $row['TOKEN'], $remote_user, $orcid_affiliations)) {
@@ -126,9 +126,10 @@ if (isset($_GET['error'])) {
 // We handled ORCID errors and initial touches before the ORCID handoff above.
 // Since we are here, this must mean we are returning from ORCID and have a CODE
 // If we are, we expect a matching session state
-if (!isset($_GET['state']) || $_GET['state'] !== $_COOKIE['oauth_state']) {
-	error_log(var_export($_GET, true));
-	error_log(var_export($_COOKIE, true));
+if (!isset($_GET['state']) || !isset($_COOKIE['oauth_state']) || $_GET['state'] !== $_COOKIE['oauth_state']) {
+	error_log('CRITICAL: GET parameters do not match COOKIE values.');
+	error_log('CRITICAL: GET: '.var_export($_GET, true));
+	error_log('CRITICAL: COOKIE: '.var_export($_COOKIE, true));
 	die_with_error_page('403 Invalid parameters');
 }
 
