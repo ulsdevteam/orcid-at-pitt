@@ -40,7 +40,7 @@ if (in_array('FERPA', $shib_groups, TRUE)) {
 // This default success message will be used multiple places
 $success_html = array(
 	'header' => 'ORCID@Pitt success!',
-	'p' => array('Thank you-you have successfully created your ORCID iD and linked it to the University of Pittsburgh.', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID iD, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website</a>.', 'Thank you for participating in this important university initiative.'),
+	'p' => array('Thank you! You have successfully linked your ORCID iD to the University of Pittsburgh.', 'To find out more about the ORCID@Pitt initiative and the benefits of having an ORCID iD, please visit the <a href="http://www.library.pitt.edu/orcid">ORCID@Pitt website</a>.', 'Thank you for participating in this important university initiative.'),
 );
 
 // Check for ORCID sending us an error message
@@ -87,6 +87,7 @@ if (isset($_GET['error'])) {
 		if (isset($row['ORCID']) && isset($row['TOKEN'])) {
 			if (validate_record($row['ORCID'], $row['TOKEN'], $remote_user, $orcid_affiliations)) {
 				// Yes, we already have a valid ORCID and token.  Send a success message and exit
+				$success_html['p'] = str_replace('linked your ORCID iD to', 'linked <a href="'.ORCID_LOGIN.'">your ORCID iD ('.$row['ORCID'].')</a> to', $success_html['p']);
 				$html = $success_html;
 				require('../includes/template.php');
 				exit();
@@ -164,6 +165,7 @@ if (isset($response['orcid'])) {
 	die_with_error_page('500 ORCID API connection error');
 }
 
+$success_html['p'] = str_replace('linked your ORCID iD to', 'linked <a href="'.ORCID_LOGIN.'">your ORCID iD ('.$response['orcid'].')</a> to', $success_html['p']);
 $html = $success_html;
 require('../includes/template.php');
 exit();
