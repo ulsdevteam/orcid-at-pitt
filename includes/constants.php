@@ -12,7 +12,7 @@ define ('PITT_AFFILIATION_KEY', 'RINGGOLD');
 define ('PITT_AFFILIATION_ID', '6614');
 
 // Construct sendoff to ORCID
-define('OAUTH_SCOPE', '/orcid-profile/read-limited /orcid-bio/external-identifiers/create /affiliations/create');
+define('OAUTH_SCOPE', '/read-limited /person/update /activities/update');
 define('ORCID_PRODUCTION', false); // sandbox; change to true when ready to leave the sandbox
 
 if (ORCID_PRODUCTION) {
@@ -21,8 +21,8 @@ if (ORCID_PRODUCTION) {
 	define('OAUTH_CLIENT_SECRET', 'REPLACED_TOKEN');
 	// production endpoints
 	define('OAUTH_AUTHORIZATION_URL', 'https://orcid.org/oauth/authorize');
-	define('OAUTH_TOKEN_URL', 'https://api.orcid.org/oauth/token'); // members
-	define('OAUTH_API_URL', 'https://api.orcid.org/v1.2/'); // members
+	define('OAUTH_TOKEN_URL', 'https://orcid.org/oauth/token'); // members
+	define('OAUTH_API_URL', 'https://api.orcid.org/v2.0/'); // members
 	define('ORCID_LOGIN', 'https://orcid.org/my-orcid');
 	// production values
 	define('OAUTH_REDIRECT_URI', 'REPLACED_URL'); // URL of the target script
@@ -35,8 +35,8 @@ if (ORCID_PRODUCTION) {
 	define('OAUTH_CLIENT_SECRET', 'REPLACED_TOKEN');
 	// sandbox endpoints
 	define('OAUTH_AUTHORIZATION_URL', 'https://sandbox.orcid.org/oauth/authorize');
-	define('OAUTH_TOKEN_URL', 'https://api.sandbox.orcid.org/oauth/token'); // members
-	define('OAUTH_API_URL', 'https://api.sandbox.orcid.org/v1.2/'); // members
+	define('OAUTH_TOKEN_URL', 'https://sandbox.orcid.org/oauth/token'); // members
+	define('OAUTH_API_URL', 'https://api.sandbox.orcid.org/v2.0/'); // members
 	define('ORCID_LOGIN', 'https://sandbox.orcid.org/my-orcid');
 	// development values
 	define('OAUTH_REDIRECT_URI', 'REPLACED_URL'); // URL of the target script
@@ -61,11 +61,11 @@ function read_profile($orcid, $token) {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_MAXREDIRS => 5,
-			CURLOPT_URL => OAUTH_API_URL.$orcid.'/orcid-profile',
+			CURLOPT_URL => OAUTH_API_URL.$orcid.'/record',
 			CURLOPT_HTTPHEADER => array('Content-Type: application/vdn.orcid+xml', 'Authorization: Bearer '.$token),
 		)
 	);
-	$result = curl_exec($curl);
+	$result = curl_exec($curl);	 //fetches all the records of a user
 	$info = curl_getinfo($curl);
 	if ($info['http_code'] == 200) {
 		return $result;
@@ -75,7 +75,7 @@ function read_profile($orcid, $token) {
 }
 
 /**
- * Write the External ID to ORCID
+ * Write the External ID to ORCID if external id was not created earlier
  * 
  * @param string $orcid ORCID Id
  * @param string $token ORCID access token
@@ -84,20 +84,15 @@ function read_profile($orcid, $token) {
  */
 function write_extid($orcid, $token, $id) {
 	$payload = '<?xml version="1.0" encoding="UTF-8"?>
-	<orcid-message xmlns="http://www.orcid.org/ns/orcid" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://raw.github.com/ORCID/ORCID-Source/master/orcid-model/src/main/resources/orcid-message-1.2.xsd">
-		<message-version>1.2</message-version>
-		<orcid-profile>
-			<orcid-bio>
-				<external-identifiers>
-					<external-identifier>
-						<external-id-common-name>'.PITT_EXTID_NAME.'</external-id-common-name>
-						<external-id-reference>'.$id.'</external-id-reference>
-						<external-id-url>'.EXTERNAL_WEBHOOK.'?id='.$id.'</external-id-url>
-					</external-identifier>
-				</external-identifiers>
-			</orcid-bio>
-		</orcid-profile>
-	</orcid-message>';
+	<external-identifier:external-identifier 
+		xmlns:external-identifier="http://www.orcid.org/ns/external-identifier" 
+		xmlns:common="http://www.orcid.org/ns/common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.orcid.org/ns/external-identifier ../person-external-identifier-2.0.xsd">				
+			<common:external-id-type>'.PITT_EXTID_NAME.'</common:external-id-type>
+			<common:external-id-value>'.$id.'</common:external-id-value>
+			<common:external-id-url>'.EXTERNAL_WEBHOOK.'?id='.$id.'</common:external-id-url>
+			<common:external-id-relationship>self</common:external-id-relationship>
+	</external-identifier:external-identifier>';
 	$curl = curl_init();
 	curl_setopt_array(
 		$curl,
@@ -106,18 +101,18 @@ function write_extid($orcid, $token, $id) {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => $payload,
-			CURLOPT_URL => OAUTH_API_URL.$orcid.'/orcid-bio/external-identifiers',
+			CURLOPT_URL => OAUTH_API_URL.$orcid.'/external-identifiers',
 			CURLOPT_HTTPHEADER => array('Content-Type: application/orcid+xml', 'Content-Length: '.strlen($payload), 'Authorization: Bearer '.$token),
 		)
 	);
 	$result = curl_exec($curl);
 	$info = curl_getinfo($curl);
 	// why is this code usually 200?
-	return (($info['http_code'] == 201 || $info['http_code'] == 200) && read_extid($result));
+	return ($info['http_code'] == 201 || $info['http_code'] == 200);
 }
 
 /**
- * Write the Affiliation to ORCID
+ * Write the Affiliation to ORCID if affiliations were not created earlier
  * 
  * @param string $orcid ORCID Id
  * @param string $token ORCID access token
@@ -128,31 +123,41 @@ function write_affiliation($orcid, $token, $type) {
 	if ($type !== 'employment' && $type !== 'education') {
 		return true;
 	}
-	$payload = '<?xml version="1.0" encoding="UTF-8"?>
-	<orcid-message xmlns="http://www.orcid.org/ns/orcid" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://raw.github.com/ORCID/ORCID-Source/master/orcid-model/src/main/resources/orcid-message-1.2.xsd">
-		<message-version>1.2</message-version>
-		<orcid-profile>
-			<orcid-activities>
-				<affiliations>
-					<affiliation visbility="public">
-						<type>'.$type.'</type>
-						<organization>
-							<name>University of Pittsburgh</name>
-							<address>
-								<city>Pittsburgh</city>
-								<region>PA</region>
-								<country>US</country>
-							</address>
-							<disambiguated-organization>
-								<disambiguated-organization-identifier>'.PITT_AFFILIATION_ID.'</disambiguated-organization-identifier>
-								<disambiguation-source>'.PITT_AFFILIATION_KEY.'</disambiguation-source>
-							</disambiguated-organization>
-						</organization>
-					</affiliation>
-				</affiliations>
-			</orcid-activities>
-		</orcid-profile>
-	</orcid-message>';
+	$commonParams = '<common:name>University of Pittsburgh</common:name>
+			 <common:address>
+				<common:city>Pittsburgh</common:city>
+				<common:region>PA</common:region>
+				<common:country>US</common:country>
+			 </common:address>
+			 <common:disambiguated-organization>
+				<common:disambiguated-organization-identifier>'.PITT_AFFILIATION_ID.'</common:disambiguated-organization-identifier>
+				<common:disambiguation-source>'.PITT_AFFILIATION_KEY.'</common:disambiguation-source>
+			 </common:disambiguated-organization>';
+		
+	if($type == 'employment') {
+		$payload = '<?xml version="1.0" encoding="UTF-8"?>
+		<employment:employment visibility="public"		  
+		 xmlns:employment="http://www.orcid.org/ns/employment" xmlns:common="http://www.orcid.org/ns/common"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://www.orcid.org/ns/orcid"		 
+		 xsi:schemaLocation="http://www.orcid.org/ns/employment ../employment-2.0.xsd">
+		<employment:organization>
+			'.$commonParams.'
+		</employment:organization>
+		 </employment:employment>';
+	} else {
+		$payload = '<?xml version="1.0" encoding="UTF-8"?>
+		<education:education visibility="public" 
+		 xmlns:education="http://www.orcid.org/ns/education"
+		 xmlns:common="http://www.orcid.org/ns/common"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"		 
+		 xmlns="http://www.orcid.org/ns/orcid"
+		 xsi:schemaLocation="http://www.orcid.org/ns/education ../education-2.0.xsd">
+		<education:organization>
+			'.$commonParams.'
+		</education:organization>
+		</education:education>';
+	}
 	$curl = curl_init();
 	curl_setopt_array(
 		$curl,
@@ -161,14 +166,13 @@ function write_affiliation($orcid, $token, $type) {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => $payload,
-			CURLOPT_URL => OAUTH_API_URL.$orcid.'/affiliations',
-			CURLOPT_HTTPHEADER => array('Content-Type: application/orcid+xml', 'Content-Length: '.strlen($payload), 'Authorization: Bearer '.$token),
+			CURLOPT_URL => OAUTH_API_URL.$orcid.'/'.$type,
+			CURLOPT_HTTPHEADER => array('Content-Type: application/vnd.orcid+xml', 'Content-Length: '.strlen($payload), 'Authorization: Bearer '.$token),
 		)
 	);
 	$result = curl_exec($curl);
 	$info = curl_getinfo($curl);
-	// why is the result sometimes blank?
-	return (($info['http_code'] == 201 || $info['http_code'] == 200) && ($result === '' || read_affiliation($result)));
+	return ($info['http_code'] == 201 || $info['http_code'] == 200);
 }
 
 /**
@@ -182,9 +186,11 @@ function read_affiliation($xml, $type) {
 		$doc = new DOMDocument();
 		$doc->loadXML($xml);
 		$xpath = new DOMXPath($doc);
-		$xpath->registerNamespace('o', "http://www.orcid.org/ns/orcid");
-		// Check on an affiliation with matches the $type and which has a disambiguation source matching our key/value pair
-		$elements = $xpath->query('//o:affiliation[o:type[text()="'.$type.'"] and o:organization/o:disambiguated-organization[o:disambiguation-source[text()="'.PITT_AFFILIATION_KEY.'"] and o:disambiguated-organization-identifier[text()="'.PITT_AFFILIATION_ID.'"]]]');
+		$xpath->registerNamespace('o', "http://www.orcid.org/ns/activities");
+		$xpath->registerNamespace('e', "http://www.orcid.org/ns/".$type);
+		$xpath->registerNamespace('c', "http://www.orcid.org/ns/common");
+		// Check if disambiguation source exists for education or employment by matching with our disambiguation-source and disambiguation-organization-identifier
+		$elements = $xpath->query('//e:'.$type.'-summary[e:organization/c:disambiguated-organization[c:disambiguation-source[text()="'.PITT_AFFILIATION_KEY.'"] and c:disambiguated-organization-identifier[text()="'.PITT_AFFILIATION_ID.'"]]]'); 
 	} catch (Exception $e) {
 		error_log($e);
 		return false;
@@ -201,12 +207,12 @@ function read_affiliation($xml, $type) {
  */
 function read_extid($xml) {
 	try {
-		$doc = new DOMDocument();
+		$doc = new DOMDocument();		
 		$doc->loadXML($xml);
 		$xpath = new DOMXPath($doc);
-		$xpath->registerNamespace('o', "http://www.orcid.org/ns/orcid");
+		$xpath->registerNamespace('o', "http://www.orcid.org/ns/common");
 		// Check on an external ID with our common name
-		$elements = $xpath->query('//o:external-id-common-name[text()="'.PITT_EXTID_NAME.'"]');
+		$elements = $xpath->query('//o:external-id-type[text()="'.PITT_EXTID_NAME.'"]');
 	} catch (Exception $e) {
 		error_log($e);
 		return false;
@@ -299,5 +305,4 @@ function execute_query_or_die($conn, $sql, $binder) {
 	}
 	return true;
 }
-
 ?>
