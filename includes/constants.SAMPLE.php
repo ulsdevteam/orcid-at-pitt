@@ -7,9 +7,9 @@ if (!$server_protocol) {
 }
 define('SERVER_PROTOCOL', $server_protocol);
 
-define ('PITT_EXTID_NAME', 'Pitt ID');
+define ('PITT_EXTID_NAME', 'My ID');
 define ('PITT_AFFILIATION_KEY', 'RINGGOLD');
-define ('PITT_AFFILIATION_ID', '6614');
+define ('PITT_AFFILIATION_ID', '1234');
 
 // Construct sendoff to ORCID
 define('OAUTH_SCOPE', '/read-limited /person/update /activities/update');
@@ -17,32 +17,32 @@ define('ORCID_PRODUCTION', false); // sandbox; change to true when ready to leav
 
 if (ORCID_PRODUCTION) {
 	// production credentials
-	define('OAUTH_CLIENT_ID', 'REPLACED_KEY');
-	define('OAUTH_CLIENT_SECRET', 'REPLACED_TOKEN');
+	define('OAUTH_CLIENT_ID', 'APP-5v8zB1P5ukFfioQ');
+	define('OAUTH_CLIENT_SECRET', '4d18615f-a0c3-4d70-9360-3bbe820dc459');
 	// production endpoints
 	define('OAUTH_AUTHORIZATION_URL', 'https://orcid.org/oauth/authorize');
 	define('OAUTH_TOKEN_URL', 'https://orcid.org/oauth/token'); // members
 	define('OAUTH_API_URL', 'https://api.orcid.org/v2.0/'); // members
 	define('ORCID_LOGIN', 'https://orcid.org/my-orcid');
 	// production values
-	define('OAUTH_REDIRECT_URI', 'REPLACED_URL'); // URL of the target script
-	define('EXTERNAL_WEBHOOK', 'REPLACED_URL); // URL of the target script
-	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = REPLACED_DNS)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = REPLACED_SERVICE)))'); // TNS for the Oracle Connection
-	define('DB_PASSWD', 'REPLACED_PASSWORD'); // Oracle Database password
+	define('OAUTH_REDIRECT_URI', 'https://my.host.tld/connect/'); // URL of the target script
+	define('EXTERNAL_WEBHOOK', 'https://my.host.tld/find'); // URL of the target script
+	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = my.db.host.tld)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = srvdb)))'); // TNS for the Oracle Connection
+	define('DB_PASSWD', 'sg26Q87Br7Hqg8W5sWMqd'); // Oracle Database password
 } else {
 	// sandbox credentials
-	define('OAUTH_CLIENT_ID', 'REPLACED_KEY');
-	define('OAUTH_CLIENT_SECRET', 'REPLACED_TOKEN');
+	define('OAUTH_CLIENT_ID', 'APP-5b51cJk3u78J25X');
+	define('OAUTH_CLIENT_SECRET', '3967db94-1403-4aa4-a676-4b2b5965a1bd');
 	// sandbox endpoints
 	define('OAUTH_AUTHORIZATION_URL', 'https://sandbox.orcid.org/oauth/authorize');
 	define('OAUTH_TOKEN_URL', 'https://sandbox.orcid.org/oauth/token'); // members
 	define('OAUTH_API_URL', 'https://api.sandbox.orcid.org/v2.0/'); // members
 	define('ORCID_LOGIN', 'https://sandbox.orcid.org/my-orcid');
 	// development values
-	define('OAUTH_REDIRECT_URI', 'REPLACED_URL'); // URL of the target script
-	define('EXTERNAL_WEBHOOK', 'REPLACED_URL'); // URL of the target script
-	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = REPLACED_DNS)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = REPLACED_SERVICE)))'); // TNS for the Oracle Connection
-	define('DB_PASSWD', 'REPLACED_PASSWORD'); // Oracle Database password
+	define('OAUTH_REDIRECT_URI', 'https://dev.my.host.tld/connect/'); // URL of the target script
+	define('EXTERNAL_WEBHOOK', 'https://dev.my.host.tld/find'); // URL of the target script
+	define('DB_TNS', '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = dev.db.host.tld)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = srvdb)))'); // TNS for the Oracle Connection
+	define('DB_PASSWD', 'jm3VCz7ogr3f45MmVf2Rv'); // Oracle Database password
 }
 
 /**
